@@ -53,22 +53,19 @@ class SDXLInference:
         """Initialize the diffusion pipeline with model and LoRA weights"""
         vae = AutoencoderKL.from_pretrained(
             self.vae_model_id,
-            torch_dtype=torch.float16
-        )
-        
+            torch_dtype=torch.float32
+        )   
         pipe = DiffusionPipeline.from_pretrained(
             self.model_id,
             vae=vae,
-            torch_dtype=torch.float16,
-            variant="fp16",
+            torch_dtype=torch.float32,
             use_safetensors=True
         )
-        
         if self.lora_path:
             pipe.load_lora_weights(self.lora_path)
-            
+           
         pipe.to(self.device)
-        return pipe
+    return pipe
     
     def generate(self, 
                 prompt: str,
